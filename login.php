@@ -26,12 +26,9 @@ include("header.php");
                     <li><button class="btn-loginReg text-justify-center" name="reg_mygtukas" type="submit"  >
                         <span class="" class="strong">PRISIJUNGTI</span></button><br>
                     </li>
-
                 </ul>
-                
-
             </div>
-            </form>
+          </form>
         </div>
 
 </section>

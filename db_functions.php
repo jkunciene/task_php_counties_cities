@@ -38,18 +38,22 @@
         //--------------createItem funkcija naujam produktui kurti--------------
 
 
-        function createItem( $name, $discription, $price, $imgname) {
+        function createItem( $name, $discription, $price, $imgname, $status) {
             $nameCrypted = mysqli_real_escape_string (getLoginDB(), $name );
             $discriptionCrypted = mysqli_real_escape_string (getLoginDB(), $discription );
             $priceCrypted = mysqli_real_escape_string (getLoginDB(), $price );
             $imgnameCrypted = mysqli_real_escape_string (getLoginDB(), $imgname );
+            $statusCrypted = mysqli_real_escape_string (getLoginDB(), $status );
 
             $query = "INSERT INTO  items
-                            VALUES( null, '$nameCrypted', '$discriptionCrypted', '$priceCrypted', '$imgnameCrypted') ";
+                            VALUES( null, '$nameCrypted', '$discriptionCrypted', '$priceCrypted', '$imgnameCrypted', $statusCrypted) ";
 
             $result = mysqli_query(getLoginDB(),  $query);
             if ( !$result) {
                 echo "Nepavyko sukurti naujos prekes" . mysqli_error(getLoginDB());
+            }
+            else {
+              echo "NEW PRODUCT WAS CREATED";
             }
         }
 
@@ -66,41 +70,33 @@
 
         //--------------updateItem funkcija  produktui pakeisti--------------
 
-        function updateItem($id, $name, $discription, $price, $imgname) {
+        function updateItem($id, $name, $discription, $price, $imgname, $status) {
             $idCrypted = mysqli_real_escape_string (getLoginDB(), $id );
             $nameCrypted = mysqli_real_escape_string (getLoginDB(), $name );
             $discriptionCrypted = mysqli_real_escape_string (getLoginDB(), $discription );
             $priceCrypted = mysqli_real_escape_string (getLoginDB(), $price );
             $imgnameCrypted = mysqli_real_escape_string (getLoginDB(), $imgname );
-
-
-
-            $queryCheck = "SELECT * FROM items
-                              WHERE id = '$id' AND
-                                    name = '$name' AND
-                                    discription = '$discription' AND
-                                    price = '$price' AND
-                                    imgname = '$imgnameCrypted'
-                             LIMIT 1;
-                                  ";
+            $statusCrypted = mysqli_real_escape_string (getLoginDB(), $status );
 
             $query = "UPDATE  items
                             SET name = '$nameCrypted',
                                 discription = '$discriptionCrypted',
                                 price = '$priceCrypted',
-                                imgname = '$imgnameCrypted',
+                                imgname = '$imgnameCrypted,
+                                status = '$statusCrypted'
 
-                            WHERE id = '$idCrypted'; ";
+                            WHERE id = '$idCrypted'
+                            LIMIT 1
+                            ";
 
-            $result = mysqli_query(getLoginDB(), $queryCheck);
+            $result = mysqli_query(getLoginDB(), $query);
 
-            if ($result->num_rows == 0) {
-              $newResult = mysqli_query(getLoginDB(),  $query);
-              echo "Item updated successfully!";
-          } else {
-            echo "Nothing changed. Information already exists.";
+            if ( !$result) {
+                echo "ERROR: nepavyko redaguoti." . mysqli_error(getLoginDB());
+            } else {
+              echo "PRODUCT WAS UPDATED";
 
-          }
+            }
         }
 
 
@@ -126,43 +122,7 @@
          }
 
 
-  //--------------CREATE order FUNKCIJA-----------------------
-          function createOrderInfo($name, $lname, $email, $phone, $address, $city, $country, $message, $orderItemNames, $totalprice) {
-              $nameCrypted = mysqli_real_escape_string (getLoginDB(), $name );
-              $lnameCrypted = mysqli_real_escape_string (getLoginDB(), $lname );
-              $emailCrypted = mysqli_real_escape_string (getLoginDB(), $email );
-              $phoneCrypted = mysqli_real_escape_string (getLoginDB(), $phone );
-              $addressCrypted = mysqli_real_escape_string (getLoginDB(), $address );
-              $cityCrypted = mysqli_real_escape_string (getLoginDB(), $city );
-              $countryCrypted = mysqli_real_escape_string (getLoginDB(), $country );
-              $messageCrypted = mysqli_real_escape_string (getLoginDB(), $message );
-              $orderItemNamesCrypted = mysqli_real_escape_string (getLoginDB(), $orderItemNames );
-              $totalPriceCrypted = mysqli_real_escape_string (getLoginDB(), $totalprice );
 
-              $query = "INSERT INTO  orders
-                              VALUES( null, '$nameCrypted', '$lnameCrypted', '$emailCrypted', '$phoneCrypted', '$addressCrypted', '$cityCrypted', '$countryCrypted', '$messageCrypted', '$orderItemNamesCrypted', '$totalPriceCrypted') ";
-
-              $result = mysqli_query(getLoginDB(),  $query);
-              if ( !$result) {
-                  echo "Something went wrong!" . mysqli_error(getLoginDB());
-              }
-          }
-
-          //--------------GET orders FUNKCIJA-----------------------
-          function getOrders($itemLimit = 50) {
-              $query = "SELECT * FROM orders LIMIT $itemLimit ";
-              $result = mysqli_query(getLoginDB(),  $query);
-
-              return $result;
-          }
-
-          //--------------GET order FUNKCIJA-----------------------
-          function getOrder($id) {
-              $query = "SELECT * FROM orders WHERE id = '$id' ";
-              $result = mysqli_query(getLoginDB(),  $query);
-              $orderById = mysqli_fetch_assoc($result);
-              return $orderById;
-          }
           //--------------SEARCH-----------------------
                   function search($search) {
                       $min_length = 3;
@@ -186,7 +146,8 @@
                                   }
                                 }
                               }
-                              else{ 
+                              else{
                                   echo "No results";
+
                               }
                       }
