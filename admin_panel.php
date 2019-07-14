@@ -8,22 +8,36 @@
     </head>
     <body>
       <?php require_once('..\db_functions.php');?>
+<style>
+h6{
+  text-decoration: line-through;
+}
+</style>
 
 <div class="container">
   <a href='create_form.php?id=" . $item['id'] . "' class='btn btn-success btn-lg'>CREATE NEW PRODUCT</a>
 </div>
       <article class='row m-3 justify-content-center '>
          <?php
-         $allItems = getItems( 10 );
+         $nuolaida = 0.05;
+
+         $allItems = getItems( 100 );
          $item = mysqli_fetch_assoc($allItems);
          while (  $item == true ) {
         echo "<div class='card' style='width: 18rem;''>";
         echo "<img class='card-img-top' src='../img/" . $item['imgname'] . ".jpg' width='200'' alt='Card image cap'>";
         echo "<div class='card-body'>";
         echo "<h5 class='card-title'>".$item['name']."</h5>";
-        echo "<h6 class='card-title'>".$item['status']."</h6>";
-        echo "<h6 class='font-weight-light text-center'>" . $item['price'] . " Eur</h6>";
+
+        echo "<h6 class='text-center'>" . $item['price'] . " Eur</h6>";
+        echo "<h5 class='font-weight-light text-center'>" . $item['price']. " Eur</h5>";
         echo "<p class='card-text'>".$item['discription']."</p>";
+        if ($item['status'] == 1) {
+          echo "<button type='button' class='btn btn-success'>Product enebled</button>";
+          }
+          else {
+            echo "<button type='button' class='btn btn-warning'>Product disabled</button>";
+          }
         echo "<a href='edit_form.php?id=" . $item['id'] . "' class='btn btn-primary'>EDIT PRODUCT</a>";
         echo "<a href='delete.php?id=" . $item['id'] . "' class='btn btn-danger'>DELETE PRODUCT</a>";
         echo "</div>";

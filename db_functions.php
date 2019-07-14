@@ -82,8 +82,8 @@
                             SET name = '$nameCrypted',
                                 discription = '$discriptionCrypted',
                                 price = '$priceCrypted',
-                                imgname = '$imgnameCrypted,
-                                status = '$statusCrypted'
+                                imgname = '$imgnameCrypted',
+                                status = $statusCrypted
 
                             WHERE id = '$idCrypted'
                             LIMIT 1
